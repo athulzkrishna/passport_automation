@@ -1,0 +1,513 @@
+//Libraries
+#include <stdio.h>
+#include <time.h>
+#include <windows.h>
+#include<malloc.h>
+#include<conio.h>
+#include<stdlib.h>
+#include<string.h>
+int unique_id=0;
+char slot[5][5]={{'-','-','-','-','-'},{'-','-','-','-','-'},{'-','-','-','-','-'},{'-','-','-','-','-'},{'-','-','-','-','-'}};
+//Structure Definition
+struct user
+{
+	char user_name[15];
+	char pass_word[15];
+	int id;
+	char name[20];
+	int age;
+	char aadhar[12];
+	int birth_date;
+	int birth_month;
+	int birth_year;
+	char ph_no[10];
+	char place_of_birth[20];
+	char address_line_1[15];
+	char address_line_2[15];
+	char status[20];
+	int slot_day, slot_number;
+	char comment[100];
+};
+
+struct user *user_list[1000];
+struct user *nodee;
+//Loader Function
+void loadingBar_green()
+{
+
+    system("color 0A");//OA for green OC for red
+    char a = 177, b = 219;
+    printf("\n\n\n\n");
+    printf("\n\n\n\n\t\t\t\t\tLoading...\n\n");
+    printf("\t\t\t\t\t");
+    int i;
+ 
+    for (i = 0; i < 26; i++)
+        printf("%c", a);
+  
+
+    printf("\r");
+    printf("\t\t\t\t\t");
+  
+    
+    for (i = 0; i < 26; i++) {
+        printf("%c", b);
+  
+       
+        Sleep(100);
+    }
+}
+void loadingBar_red()
+{
+
+    system("color 0C");//OA for green OC for red
+    char a = 177, b = 219;
+    printf("\n\n\n\n");
+    printf("\n\n\n\n\t\t\t\t\tLoading...\n\n");
+    printf("\t\t\t\t\t");
+    int i;
+    for (i = 0; i < 26; i++)
+        printf("%c", a);
+
+    printf("\r");
+    printf("\t\t\t\t\t");
+
+    for (i = 0; i < 26; i++) {
+        printf("%c", b);
+        Sleep(100);
+    }
+}
+void loading(int n)
+{
+    int msec = 0;
+    const int trigger = 500; // ms
+    const int printWidth = 4;
+    int counter = 0;
+    clock_t before = clock();
+
+    while (n)
+    {
+        fputs("Loading", stdout);
+        clock_t difference = clock() - before;
+        msec = difference * 1000 / CLOCKS_PER_SEC;
+        int i;
+        if (msec >= trigger)
+        {
+            counter++;
+            msec = 0;
+            before = clock();
+        }
+        for (i = 0; i < counter; ++i)
+        {            
+            fputc('.', stdout);
+        }
+        for (i = 0; i < printWidth - counter; ++i)
+        {
+            fputc(' ', stdout);
+        }
+        fputc('\r', stdout);
+        fflush(stdout);
+
+        if (counter == printWidth)
+        {
+            counter = 0;
+        }
+        n--;
+    }
+}
+void sign_up()
+{
+	system("cls");
+	system("color 0E");
+	printf("*****SignUp******* \n");
+	char userName[15];
+	char passWord[15];
+	nodee=(struct user*)malloc(sizeof(struct user));
+	printf("Welcome New User!! \n");
+	printf("Enter a User Name: \n");
+	scanf("%s",&nodee->user_name);
+	printf("Enter your preferred PassWord: \n");
+	scanf("%s",&nodee->pass_word);
+	strcpy(nodee->status,"Not Applied");
+	strcpy(nodee->comment,"NONE");
+	nodee->id=unique_id;
+	user_list[unique_id++]=nodee;
+	
+	printf("Signed Up Successfully !!\n");	
+}
+void go_ahead()
+{
+	system("cls");
+	loading(20000);
+	printf("Success!!!\n");
+	
+	int i,c;
+	c=100;
+	while(c)
+	{
+		system("color 0C");
+		for(i=0;i<1000;i++);
+		system("color 0A");
+		for(i=0;i<1000;i++);
+		c--;
+	}
+}
+int login()
+{
+	system("cls");
+	printf("\n******Login********\n");
+	system("color 0E");
+	char name[15];
+	char pass[15];
+	printf("Enter your User Name: \n");
+	scanf("%s",&name);
+	printf("Enter your PassWord: \n");
+	scanf("%s",&pass);
+	int i;
+	for(i=0;i<unique_id;i++)
+	{
+		if(check(user_list[i]->user_name,name)&&check(user_list[i]->pass_word,pass))
+		{
+			printf("Successfully Authenticated !!");
+			system("color 0A");
+		//	go_ahead();
+			return user_list[i]->id;
+		}
+	}
+	printf("Verify Your Credentials and Try again ! ");
+	system("color 0C");
+	char ch;
+	printf("\nDo you wish to TRY AGAIN:((y/n)?");
+	ch=getche();
+	if(ch=='y')
+	{
+		return login();
+	}
+	
+	return -1;
+
+}
+int check(char a[],char b[])
+{
+	int n=strlen(a);
+	int m=strlen(b);
+	if(n!=m)
+	{
+		return 0;
+	}
+	int i;
+	for(i=0;i<n;i++)
+	{
+		if(a[i]!=b[i])
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+void approve()
+{
+	int app;
+	char ch;
+	printf("For Approval!\n");
+	printf("Choose an ID for approval!\n");
+	int i=0;
+	int booli=0;
+	for(i=0;i<unique_id;i++)
+	{
+		if(!strcmp(user_list[i]->status,"Appointment Booked"))
+		{
+		booli=1;
+		printf("User ID: %d\n",i+1);
+		printf("NAME:%s\n",user_list[i]->user_name);
+		printf("STATUS:%s\n",user_list[i]->status);
+		printf("*************\n");
+		}
+	}
+	if(booli==0){
+		printf("\nNo Applications to approve!");
+		
+	}
+	else{
+	
+	printf("\nApprove ID:");
+	scanf("%d",&app);
+	app--;
+	showw(app);
+	printf("\nPress a to approve and d to Decline: ");
+	ch=getche();
+	if(ch=='a'){
+	
+		strcpy(user_list[app]->status,"Approved");
+		
+	}
+	else
+	{
+		strcpy(user_list[app]->status,"Declined");
+		printf("\nAdd Some Comment - ");
+		//scanf("%s",&user_list[app]->comment);
+		fflush(stdin);
+		gets(user_list[app]->comment);
+		fflush(stdin);
+	}
+	slot[user_list[app]->slot_day-1][user_list[app]->slot_number-1]='-';
+}
+	
+}
+void showw(int iden)
+{
+	//int i;
+	//printf("Registration.....\n");
+	printf("Name: %s\n",user_list[iden]->name);
+	//scanf("%s",&user_list[iden]->name);
+	printf("Age: %d\n",user_list[iden]->age);
+	//scanf("%d",&user_list[iden]->age);
+	printf("Aadhar Number: %s\n",user_list[iden]->aadhar);
+	//scanf("%s",&user_list[iden]->aadhar);	
+	printf("Birth Date: %d\n",user_list[iden]->birth_date);
+	//scanf("%s",&user_list[iden]->birth_date);
+	printf("Birth Month: %d\n",user_list[iden]->birth_month);
+	//scanf("%s",&user_list[iden]->birth_month);
+	printf("Birth Year: %d\n",user_list[iden]->birth_year);
+	//scanf("%s",&user_list[iden]->birth_year);
+	printf("Place Of Birth: %s\n",user_list[iden]->place_of_birth);
+	//scanf("%s",&user_list[iden]->place_of_birth);
+	printf("Address Line 1: %s\n",user_list[iden]->address_line_1);
+	//scanf("%s",&user_list[iden]->address_line_1);
+	printf("Address Line 2: %s\n",user_list[iden]->address_line_2);
+	//scanf("%s",&user_list[iden]->address_line_2);
+	printf("Phone Number: %s\n",user_list[iden]->ph_no);
+	//scanf("%d",&user_list[iden]->ph_no);
+}
+void view_all()
+{
+	printf("Available Users\n");
+	printf("****************************\n");
+	int i=0;
+	for(i=0;i<unique_id;i++)
+	{
+		printf("USER ID: %d\n",i+1);
+		printf("NAME:%s\n",user_list[i]->user_name);
+		printf("STATUS:%s\n",user_list[i]->status);
+		printf("*************\n");
+	}
+}
+void admin_panel()
+{
+	//1.View 2.Approve
+	int c;
+	char ch;
+	int d;
+	int idd;
+	do
+	{
+	   system("cls");
+	   system("color 0E");
+	   printf("************************Admin Menu:**************************");
+	   printf("\nEnter your choice:");
+       printf("\n1.View Users\n2.Approve Users\n3.Exit\n**************************************************************");
+       printf("\nEnter your choice:");
+	   scanf("%d",&c);
+	   switch(c)
+	  {
+		case 1:
+			//loadingBar_green();
+		    view_all();
+			break;
+		case 2:
+			//loadingBar_green();
+			approve();
+		    break;
+
+	    case 3:
+		    printf("Thankyou for your responses>>>...");
+			break;	
+		default:
+		    printf("Invalid choice>>>>):");
+		    break;	 						
+	   }
+	  printf("\nDo you wish to continue in the Admin menu:((y/n)?");
+	  ch=getche();
+	}while(ch != 'n');	
+}
+void check_status(int iden)
+{
+	printf("Status page.....\n");
+	printf("Your Current Status is : %s ",user_list[iden]->status);
+	printf("\nSpecial Comment : %s ",user_list[iden]->comment);
+}
+void register_passport(int iden)
+{
+	int i;
+	//printf("Registration.....\n");
+	printf("Enter your Name: \n");
+	scanf("%s",&user_list[iden]->name);
+	printf("Enter your Age: \n");
+	scanf("%d",&user_list[iden]->age);
+	printf("Enter your Aadhar Number: \n");
+	scanf("%s",&user_list[iden]->aadhar);	
+	printf("Enter your Birth Date: \n");
+	scanf("%d",&user_list[iden]->birth_date);
+	printf("Enter your Birth Month: \n");
+	scanf("%d",&user_list[iden]->birth_month);
+	printf("Enter your Birth Year: \n");
+	scanf("%d",&user_list[iden]->birth_year);
+	printf("Enter your Place Of Birth: \n");
+	scanf("%s",&user_list[iden]->place_of_birth);
+	printf("Enter your Address Line 1: \n");
+	scanf("%s",&user_list[iden]->address_line_1);
+	printf("Enter your Address Line 2: \n");
+	scanf("%s",&user_list[iden]->address_line_2);
+	printf("Enter your Phone Number: \n");
+	scanf("%s",&user_list[iden]->ph_no);	
+	strcpy(user_list[iden]->status,"Applied");
+	printf("You Have Successfully Registered for New Passport!!");
+}
+void pay()
+{
+	printf("Payment Options....");
+}
+void book(int iden)
+{
+	int i, j, slot_day, slot_number;
+	char ch;
+	if(!strcmp(user_list[iden]->status,"Not Applied"))
+	{
+		printf("\nKindly register and book your appointment");
+	}
+	else if(!strcmp(user_list[iden]->status,"Appointment Booked"))
+	{
+		printf("\nYou have already booked an appointment!");
+	}
+	else if(!strcmp(user_list[iden]->status,"Approved"))
+	{
+		printf("\nYour Passport is getting ready for dispatch!");
+	}
+	else 
+	{
+		printf("Book Appointments....\n");
+		printf("\nAvailable slots\n");
+		printf("\n\t9am-10am\t10am-11am\t11am-12pm\t2pm-3pm\t\t3pm-4pm\t\t\n");
+		for(i=0;i<5;i++)
+		{
+			printf("\nDay %d\t", i+1);
+			for(j=0; j<5; j++)
+				printf("  %c\t\t", slot[i][j]);
+		}
+		
+		printf("\nEnter the day to book the slot: ");
+		scanf("%d", &slot_day);
+		
+		printf("\nEnter the slot number to book the slot: ");
+		scanf("%d", &slot_number);
+		
+		if(slot[slot_day-1][slot_number-1]=='X')
+		{
+			printf("\nThe selected slot is already booked. Try again!");
+			book(iden);
+		}
+		else
+		{
+			user_list[iden]->slot_day = slot_day;
+			user_list[iden]->slot_number = slot_number;			
+			slot[slot_day-1][slot_number-1]='X';
+		}
+			
+		
+		printf("\n Slot %d of Day %d is booked", user_list[iden]->slot_number, user_list[iden]->slot_day);
+		
+		strcpy(user_list[iden]->status,"Appointment Booked");
+		strcpy(user_list[iden]->comment,"NONE");
+		
+	}	
+}
+void application_page(int iden){
+	printf("Your Authenticated ID is %d",iden);
+	int c;
+	char ch;
+	int d;
+	int idd;
+	do
+	{
+	   system("cls");
+	   system("color 0E");
+	   printf("************************Application Page:**************************");
+	   printf("\nEnter your choice:");
+       printf("\n1.Check Status\n2.Register for New Passport\n3.Pay Fees\n4.Book Appointment\n**************************************************************");
+       printf("\nEnter your choice:");
+	   scanf("%d",&c);
+	   switch(c)
+	  {
+		case 1:
+			check_status(iden);
+			break;
+		case 2:
+			//loadingBar_green();
+			register_passport(iden);
+		    break;
+		case 3:
+			pay();
+		    break;
+	    case 4:
+	    	//loadingBar_green();
+	    	book(iden);
+			break;	
+		case 5:
+			break;
+		default:
+		    printf("Invalid choice>>>>):");
+		    break;
+	   }
+	  printf("\nDo you wish to continue in the Application page:((y/n)?");
+	  ch=getche();
+	}while(ch != 'n');		
+}
+void main()
+{
+	//loading(20000);
+	//loadingBar();
+	int c;
+	char ch;
+	int d;
+	int idd;
+	
+	do
+	{
+	   system("cls");
+	   system("color 0E");
+	   printf("************************Main Menu:**************************");
+	   printf("\nEnter your choice:");
+       printf("\n1.New User\n2.Existing User\n3.Admin\n4.Exit\n**************************************************************");
+       printf("\nEnter your choice:");
+	   scanf("%d",&c);
+	   switch(c)
+	  {
+		case 1:
+			loadingBar_green();
+		    sign_up();
+			break;
+		case 2:
+			
+			loadingBar_green();
+			idd=login();
+			if(idd==-1){
+				break;
+			}
+			application_page(idd);
+		    break;
+		case 3:
+		    admin_panel();
+		    break;
+	
+	    case 4:
+		    printf("Thankyou for your responses>>>...");
+			break;	
+		default:
+		    printf("Invalid choice>>>>):");
+		    break;					
+	   }
+	  printf("\nDo you wish to continue in the main menu:((y/n)?");
+	  ch=getche();
+	}while(ch != 'n');	
+}
+	
